@@ -3,10 +3,12 @@ package com.hanss.assetup.webservices.restservices.asset;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Date;
 import java.util.Objects;
 
 @Entity
+@Table(name = "ASSET")
 public class Asset {
     @Id
     @GeneratedValue
