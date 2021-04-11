@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-@CrossOrigin(origins = {"http://localhost:3000", "http://hanss.strangled.net:8080", "http://192.168.5.45:9080", "http://192.168.5.44:3000"})
+@CrossOrigin("http://localhost:3000")
 @RestController
 public class AssetJpaResource {
 
@@ -42,23 +42,23 @@ public class AssetJpaResource {
     }
 
 
-    //Edit/Update a Meal
+    //Edit/Update a Asset
     //PUT /users/{user_name}/todos/{todo_id}
     @PutMapping("/api/users/{username}/assets/{id}")
     public ResponseEntity<Asset> updateAsset(
             @PathVariable String username,
-            @PathVariable long id, @RequestBody Asset meal){
-        meal.setUsername(username);
-        Asset mealUpdated = assetJpaRepository.save(meal);
-        return new ResponseEntity<Asset>(meal, HttpStatus.OK);
+            @PathVariable long id, @RequestBody Asset asset){
+        asset.setUsername(username);
+        Asset assetUpdated = assetJpaRepository.save(asset);
+        return new ResponseEntity<Asset>(asset, HttpStatus.OK);
     }
 
     @PostMapping("/api/users/{username}/assets")
     public ResponseEntity<Void> createAsset(
-            @PathVariable String username, @RequestBody Asset meal){
+            @PathVariable String username, @RequestBody Asset asset){
 
-        meal.setUsername(username);
-        Asset createdTodo = assetJpaRepository.save(meal);
+        asset.setUsername(username);
+        Asset createdTodo = assetJpaRepository.save(asset);
         //Location
         //Get current resource url
         ///{id}

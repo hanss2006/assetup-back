@@ -25,7 +25,7 @@ import com.hanss.assetup.webservices.restservices.jwt.JwtTokenUtil;
 import com.hanss.assetup.webservices.restservices.jwt.JwtUserDetails;
 
 @RestController
-@CrossOrigin(origins="http://localhost:3000")
+@CrossOrigin("http://localhost:3000")
 public class JwtAuthenticationRestController {
 
   @Value("${jwt.http.request.header}")

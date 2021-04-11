@@ -19,6 +19,7 @@ public class Asset {
     private int price;
     private int quantity;
     private Date purchaseDate;
+    private String currency = "RUB";
 
     @Override
     public boolean equals(Object o) {
@@ -31,12 +32,13 @@ public class Asset {
                 && description.equals(asset.description)
                 && price == asset.price
                 && quantity == asset.quantity
-                && purchaseDate.equals(asset.purchaseDate);
+                && purchaseDate.equals(asset.purchaseDate)
+                && currency.equals(asset.currency);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, description, price, purchaseDate);
+        return Objects.hash(id, username, ticker, description, price, quantity, purchaseDate, currency);
     }
 
     protected Asset() {
@@ -44,7 +46,7 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, String username, String ticker, String description, int price, int quantity, Date purchaseDate) {
+    public Asset(Long id, String username, String ticker, String description, int price, int quantity, Date purchaseDate, String currency) {
         super();
         this.id = id;
         this.username = username;
@@ -53,6 +55,7 @@ public class Asset {
         this.price = price;
         this.quantity = quantity;
         this.purchaseDate = purchaseDate;
+        this.currency = currency;
     }
 
     public Long getId() {
@@ -91,8 +94,8 @@ public class Asset {
         this.price = calories;
     }
 
-    public void setPurchaseDate(Date mealDate) {
-        this.purchaseDate = mealDate;
+    public void setPurchaseDate(Date purchaseDate) {
+        this.purchaseDate = purchaseDate;
     }
 
     public String getTicker() { return ticker; }
@@ -102,4 +105,8 @@ public class Asset {
     public int getQuantity() { return quantity; }
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
+
+    public String getCurrency() { return currency; }
+
+    public void setCurrency(String currency) { this.currency = currency; }
 }
