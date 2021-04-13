@@ -5,6 +5,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.persistence.Id;
 
 @CrossOrigin("http://localhost:3000")
 @RestController
@@ -25,20 +29,35 @@ public class AssetJpaResource {
 
     @GetMapping("/api/users/{username}/assets")
     public List<Asset> getAllAssets(@PathVariable String username){
-        return assetJpaRepository.findByUsername(username);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        return assetJpaRepository.findByUsername(currentPrincipalName);
     }
 
     @GetMapping("/api/users/{username}/assets/{id}")
     public Asset getAsset(@PathVariable String username, @PathVariable long id){
-        return assetJpaRepository.findById(id).get();
+        Asset asset =  assetJpaRepository.findById(id).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        if (asset != null && asset.getUsername().equals(currentPrincipalName)){
+            return asset;
+        }
+        return null;
     }
 
     // DELETE /users/{username}/todos/{id}
     @DeleteMapping("/api/users/{username}/assets/{id}")
     public ResponseEntity<Void> deleteAsset(
             @PathVariable String username, @PathVariable long id) {
-        assetJpaRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
+
+        Asset asset =  assetJpaRepository.findById(id).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        if (asset != null && asset.getUsername().equals(currentPrincipalName)){
+            assetJpaRepository.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.badRequest().build();
     }
 
 
@@ -48,16 +67,27 @@ public class AssetJpaResource {
     public ResponseEntity<Asset> updateAsset(
             @PathVariable String username,
             @PathVariable long id, @RequestBody Asset asset){
-        asset.setUsername(username);
-        Asset assetUpdated = assetJpaRepository.save(asset);
-        return new ResponseEntity<Asset>(asset, HttpStatus.OK);
+
+        Asset assetOld =  assetJpaRepository.findById(id).get();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
+        if (assetOld != null && assetOld.getUsername().equals(currentPrincipalName)){
+            asset.setId(id);
+            asset.setUsername(currentPrincipalName);
+            Asset assetUpdated = assetJpaRepository.save(asset);
+            return new ResponseEntity<Asset>(asset, HttpStatus.OK);
+        }
+        return ResponseEntity.badRequest().build();
     }
 
     @PostMapping("/api/users/{username}/assets")
     public ResponseEntity<Void> createAsset(
             @PathVariable String username, @RequestBody Asset asset){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String currentPrincipalName = authentication.getName();
 
-        asset.setUsername(username);
+        asset.setId(-1L);
+        asset.setUsername(currentPrincipalName);
         Asset createdTodo = assetJpaRepository.save(asset);
         //Location
         //Get current resource url
