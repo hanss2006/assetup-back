@@ -17,8 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.persistence.Id;
-
 @CrossOrigin("http://localhost:3000")
 @RestController
 public class AssetJpaResource {
@@ -96,5 +94,4 @@ public class AssetJpaResource {
                 .path("/{id}").buildAndExpand(createdTodo.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
-
 }

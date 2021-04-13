@@ -1,5 +1,6 @@
 package com.hanss.assetup.webservices.restservices.jwt.resource;
 
+import java.net.URI;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,15 +15,12 @@ import org.springframework.security.authentication.DisabledException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.hanss.assetup.webservices.restservices.jwt.JwtTokenUtil;
 import com.hanss.assetup.webservices.restservices.jwt.JwtUserDetails;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @CrossOrigin("http://localhost:3000")
@@ -85,5 +83,13 @@ public class JwtAuthenticationRestController {
       throw new AuthenticationException("INVALID_CREDENTIALS", e);
     }
   }
+
+
+  @GetMapping("/")
+  public ResponseEntity<Void> forwardToIndex(){
+    String uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/index.html").build().toUriString();
+    return ResponseEntity.status(HttpStatus.FOUND).location(URI.create(uri)).build();
+  }
+
 }
 
