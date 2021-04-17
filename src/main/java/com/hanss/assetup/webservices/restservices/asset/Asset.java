@@ -16,7 +16,7 @@ public class Asset {
     private String username;
     private String ticker;
     private String description;
-    private int price;
+    private float price;
     private int quantity;
     private Date purchaseDate;
     private String currency = "RUB";
@@ -46,7 +46,7 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, String username, String ticker, String description, int price, int quantity, Date purchaseDate, String currency) {
+    public Asset(Long id, String username, String ticker, String description, float price, int quantity, Date purchaseDate, String currency) {
         super();
         this.id = id;
         this.username = username;
@@ -70,7 +70,7 @@ public class Asset {
         return description;
     }
 
-    public int getPrice() {
+    public float getPrice() {
         return price;
     }
 
@@ -90,23 +90,23 @@ public class Asset {
         this.description = description;
     }
 
-    public void setPrice(int calories) {
-        this.price = calories;
+    public void setPrice(float price) {
+        this.price = price;
     }
 
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
 
-    public String getTicker() { return ticker; }
+    public String getTicker() { return this.ticker; }
 
     public void setTicker(String ticker) { this.ticker = ticker; }
 
-    public int getQuantity() { return quantity; }
+    public int getQuantity() { return this.quantity; }
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public String getCurrency() { return currency; }
+    public String getCurrency() { return this.currency; }
 
     public void setCurrency(String currency) { this.currency = currency; }
 }

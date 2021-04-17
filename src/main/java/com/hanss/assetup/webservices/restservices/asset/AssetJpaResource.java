@@ -25,15 +25,15 @@ public class AssetJpaResource {
     private AssetJpaRepository assetJpaRepository;
 
 
-    @GetMapping("/api/users/{username}/assets")
-    public List<Asset> getAllAssets(@PathVariable String username){
+    @GetMapping("/api/assets")
+    public List<Asset> getAllAssets(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
         return assetJpaRepository.findByUsername(currentPrincipalName);
     }
 
-    @GetMapping("/api/users/{username}/assets/{id}")
-    public Asset getAsset(@PathVariable String username, @PathVariable long id){
+    @GetMapping("/api/assets/{id}")
+    public Asset getAsset(@PathVariable long id){
         Asset asset =  assetJpaRepository.findById(id).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
@@ -44,9 +44,8 @@ public class AssetJpaResource {
     }
 
     // DELETE /users/{username}/todos/{id}
-    @DeleteMapping("/api/users/{username}/assets/{id}")
-    public ResponseEntity<Void> deleteAsset(
-            @PathVariable String username, @PathVariable long id) {
+    @DeleteMapping("/api/assets/{id}")
+    public ResponseEntity<Void> deleteAsset(@PathVariable long id) {
 
         Asset asset =  assetJpaRepository.findById(id).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -61,10 +60,8 @@ public class AssetJpaResource {
 
     //Edit/Update a Asset
     //PUT /users/{user_name}/todos/{todo_id}
-    @PutMapping("/api/users/{username}/assets/{id}")
-    public ResponseEntity<Asset> updateAsset(
-            @PathVariable String username,
-            @PathVariable long id, @RequestBody Asset asset){
+    @PutMapping("/api/assets/{id}")
+    public ResponseEntity<Asset> updateAsset(@PathVariable long id, @RequestBody Asset asset){
 
         Asset assetOld =  assetJpaRepository.findById(id).get();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -78,9 +75,8 @@ public class AssetJpaResource {
         return ResponseEntity.badRequest().build();
     }
 
-    @PostMapping("/api/users/{username}/assets")
-    public ResponseEntity<Void> createAsset(
-            @PathVariable String username, @RequestBody Asset asset){
+    @PostMapping("/api/assets")
+    public ResponseEntity<Void> createAsset(@RequestBody Asset asset){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String currentPrincipalName = authentication.getName();
 
