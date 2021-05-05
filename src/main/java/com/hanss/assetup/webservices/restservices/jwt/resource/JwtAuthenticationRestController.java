@@ -23,7 +23,7 @@ import com.hanss.assetup.webservices.restservices.jwt.JwtUserDetails;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@CrossOrigin("http://localhost:3000")
+@CrossOrigin("*")
 public class JwtAuthenticationRestController {
 
   @Value("${jwt.http.request.header}")

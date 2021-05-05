@@ -1,9 +1,6 @@
 package com.hanss.assetup.webservices.restservices.asset;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 import java.util.Objects;
 
@@ -13,8 +10,9 @@ public class Asset {
     @Id
     @GeneratedValue
     private Long id;
-    private String username;
+    private Long userId;
     private String ticker;
+    @Lob
     private String description;
     private float price;
     private int quantity;
@@ -27,7 +25,7 @@ public class Asset {
         if (o == null || getClass() != o.getClass()) return false;
         Asset asset = (Asset) o;
         return id == asset.id
-                && username.equals(asset.username)
+                && userId.equals(asset.userId)
                 && ticker.equals(asset.ticker)
                 && description.equals(asset.description)
                 && price == asset.price
@@ -38,7 +36,7 @@ public class Asset {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, ticker, description, price, quantity, purchaseDate, currency);
+        return Objects.hash(id, userId, ticker, description, price, quantity, purchaseDate, currency);
     }
 
     protected Asset() {
@@ -46,10 +44,10 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, String username, String ticker, String description, float price, int quantity, Date purchaseDate, String currency) {
+    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, String currency) {
         super();
         this.id = id;
-        this.username = username;
+        this.userId = userId;
         this.ticker = ticker;
         this.description = description;
         this.price = price;
@@ -62,8 +60,8 @@ public class Asset {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public Long getUserId() {
+        return userId;
     }
 
     public String getDescription() {
@@ -82,8 +80,8 @@ public class Asset {
         this.id = id;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setUserId(Long username) {
+        this.userId = username;
     }
 
     public void setDescription(String description) {
