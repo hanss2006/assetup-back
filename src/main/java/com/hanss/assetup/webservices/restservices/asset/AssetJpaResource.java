@@ -93,12 +93,12 @@ public class AssetJpaResource {
         User user = userRepository.findByEmail(currentPrincipalName);
         asset.setId(-1L);
         asset.setUserId(user.getId());
-        Asset createdTodo = assetJpaRepository.save(asset);
+        Asset createdAsset = assetJpaRepository.save(asset);
         //Location
         //Get current resource url
         ///{id}
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(createdTodo.getId()).toUri();
+                .path("/{id}").buildAndExpand(createdAsset.getId()).toUri();
         return ResponseEntity.created(uri).build();
     }
 }

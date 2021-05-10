@@ -1,4 +1,5 @@
 package com.hanss.assetup.webservices.restservices.asset;
+import com.hanss.assetup.webservices.restservices.currency.Currency;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -17,7 +18,10 @@ public class Asset {
     private float price;
     private int quantity;
     private Date purchaseDate;
-    private String currency = "RUB";
+    private int currency_id;
+    @ManyToOne
+    @JoinColumn(name = "CURRENCY_ID", insertable = false, updatable = false)
+    private Currency currency;
 
     @Override
     public boolean equals(Object o) {
@@ -30,13 +34,12 @@ public class Asset {
                 && description.equals(asset.description)
                 && price == asset.price
                 && quantity == asset.quantity
-                && purchaseDate.equals(asset.purchaseDate)
-                && currency.equals(asset.currency);
+                && purchaseDate.equals(asset.purchaseDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, ticker, description, price, quantity, purchaseDate, currency);
+        return Objects.hash(id, userId, ticker, description, price, quantity, purchaseDate);
     }
 
     protected Asset() {
@@ -44,7 +47,7 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, String currency) {
+    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, Integer currency_id) {
         super();
         this.id = id;
         this.userId = userId;
@@ -53,7 +56,7 @@ public class Asset {
         this.price = price;
         this.quantity = quantity;
         this.purchaseDate = purchaseDate;
-        this.currency = currency;
+        this.currency_id = currency_id;
     }
 
     public Long getId() {
@@ -104,7 +107,13 @@ public class Asset {
 
     public void setQuantity(int quantity) { this.quantity = quantity; }
 
-    public String getCurrency() { return this.currency; }
+    public Currency getCurrency() { return this.currency; }
 
-    public void setCurrency(String currency) { this.currency = currency; }
+    public int getCurrency_id() {
+        return currency_id;
+    }
+
+    public void setCurrency_id(int currency_id) {
+        this.currency_id = currency_id;
+    }
 }
