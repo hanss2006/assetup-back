@@ -49,8 +49,8 @@ public class SetupDataLoader implements
         if (userRepository.findByEmail(email)==null){
             Role adminRole = roleRepository.findByName("ROLE_ADMIN");
             User user = new User();
-            user.setFirstName("Павел");
-            user.setLastName("Груданов");
+            user.setFirstName("Пав");
+            user.setLastName("Гр");
             user.setPassword(passwordEncoder.encode("privet"));
             user.setEmail(email);
             user.setRoles(Arrays.asList(adminRole));
@@ -58,25 +58,25 @@ public class SetupDataLoader implements
             userRepository.save(user);
         }
 
-        email = "kocherigka79@gmail.com";
+        email = "koch@gmail.com";
         if (userRepository.findByEmail(email)==null){
             Role userRole = roleRepository.findByName("ROLE_USER");
             User user = new User();
-            user.setFirstName("Ирина");
-            user.setLastName("Мануковская");
-            user.setPassword(passwordEncoder.encode("kocherigka"));
+            user.setFirstName("Ир");
+            user.setLastName("Ман");
+            user.setPassword(passwordEncoder.encode("sdfsdf"));
             user.setEmail(email);
             user.setRoles(Arrays.asList(userRole));
             user.setEnabled(true);
             userRepository.save(user);
         }
 
-        email = "crazyelf@mail.ru";
+        email = "crazyelf12312@mail.ru";
         if (userRepository.findByEmail(email)==null){
             Role userRole = roleRepository.findByName("ROLE_USER");
             User user = new User();
-            user.setFirstName("Иван");
-            user.setLastName("Шейнин");
+            user.setFirstName("Ив");
+            user.setLastName("Шей");
             user.setPassword(passwordEncoder.encode("privet"));
             user.setEmail(email);
             user.setRoles(Arrays.asList(userRole));
