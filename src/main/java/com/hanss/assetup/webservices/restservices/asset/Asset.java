@@ -18,7 +18,8 @@ public class Asset {
     private float price;
     private int quantity;
     private Date purchaseDate;
-    private int currency_id;
+    @Column(name="CURRENCY_ID")
+    private long currencyId;
     @ManyToOne
     @JoinColumn(name = "CURRENCY_ID", insertable = false, updatable = false)
     private Currency currency;
@@ -47,7 +48,7 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, Integer currency_id) {
+    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, Long currencyId) {
         super();
         this.id = id;
         this.userId = userId;
@@ -56,7 +57,7 @@ public class Asset {
         this.price = price;
         this.quantity = quantity;
         this.purchaseDate = purchaseDate;
-        this.currency_id = currency_id;
+        this.currencyId = currencyId;
     }
 
     public Long getId() {
@@ -109,11 +110,11 @@ public class Asset {
 
     public Currency getCurrency() { return this.currency; }
 
-    public int getCurrency_id() {
-        return currency_id;
+    public long getCurrencyId() {
+        return currencyId;
     }
 
-    public void setCurrency_id(int currency_id) {
-        this.currency_id = currency_id;
+    public void setCurrencyId(long currencyId) {
+        this.currencyId = currencyId;
     }
 }
