@@ -1,1 +1,0 @@
-curl -X POST localhost:8080/assetup/api/authenticate -H Content-type:application/json -d {\"username\":\"hanss@list.ru\",\"password\":\"privet\"}

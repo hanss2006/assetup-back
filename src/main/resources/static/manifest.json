@@ -1,0 +1,21 @@
+{
+  "short_name": "Assetup",
+  "name": "Accounting for exchange-traded assets",
+  "icons": [
+    {
+      "src": "/assetup/images/assetup.png",
+      "type": "image/png",
+      "sizes": "1024x1024"
+    },
+    {
+      "src": "/assetup/images/assetup_x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
