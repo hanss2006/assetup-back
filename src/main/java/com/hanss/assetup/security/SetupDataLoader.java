@@ -86,11 +86,12 @@ public class SetupDataLoader implements
 
     @Transactional
     Role createRoleIfNotFound(ERole name) {
-        Role role = roleRepository.findByName(name).get();
-        if (role == null) {
-            role = new Role(name);
-            roleRepository.save(role);
+        Optional<Role> role = roleRepository.findByName(name);
+        if (!role.isPresent()) {
+            Role newRole = new Role(name);
+            roleRepository.save(newRole);
+            return newRole;
         }
-        return role;
+        return role.get();
     }
 }
