@@ -1,4 +1,4 @@
-SET JAVA_HOME="C:\Progra~1\Java\jdk-17.0.1"
+SET JAVA_HOME="C:\Progra~1\Java\jdk1.8.0_241"
 
 @REM ----------------------------------------------------------------------------
 @REM Licensed to the Apache Software Foundation (ASF) under one
