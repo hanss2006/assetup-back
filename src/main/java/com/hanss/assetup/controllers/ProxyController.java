@@ -1,16 +1,19 @@
 package com.hanss.assetup.controllers;
 
+import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@CrossOrigin(origins = "http://localhost:3000")
-public class ProxyController {
+@RequestMapping("/api")
+public class ProxyController implements SecuredRestController {
     static final String URL_CANDLES =
     "https://iss.moex.com/iss/engines/stock/markets/shares/securities/%1$s/candles.json?interval=24";
     static final String URL_FROM =
@@ -18,7 +21,7 @@ public class ProxyController {
     static final String URL_TILL =
             "&till=%1$s";
 
-    @GetMapping("/api/proxy/{ticker}")
+    @GetMapping("/proxy/{ticker}")
     public ResponseEntity<?> getCandlesFromMoex(@PathVariable String ticker,
                                                               @RequestParam(required = false) String startDate,
                                                               @RequestParam(required = false) String endDate) {

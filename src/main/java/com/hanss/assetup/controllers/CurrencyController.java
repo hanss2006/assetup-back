@@ -2,6 +2,7 @@ package com.hanss.assetup.controllers;
 
 import com.hanss.assetup.models.Currency;
 import com.hanss.assetup.repository.CurrencyRepository;
+import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ import java.util.List;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
-public class CurrencyController {
+public class CurrencyController implements SecuredRestController {
     @Autowired
     private CurrencyRepository currencyRepository;
 

@@ -16,13 +16,9 @@
     <description>Securities accounting application</description>
     <properties>
         <java.version>11</java.version>
+        <springdoc-openapi-ui.version>1.6.3</springdoc-openapi-ui.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>org.springdoc</groupId>
-            <artifactId>springdoc-openapi-ui</artifactId>
-            <version>1.6.3</version>
-        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -71,6 +67,11 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-ui</artifactId>
+            <version>${springdoc-openapi-ui.version}</version>
+        </dependency>
+        <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt</artifactId>
             <version>0.9.1</version>
@@ -86,5 +87,27 @@
             </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <id>dev-local</id>
+            <properties>
+                <context.path>dev-local</context.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>test</id>
+            <properties>
+                <context.path>test</context.path>
+            </properties>
+        </profile>
+        <profile>
+            <id>master</id>
+            <properties>
+                <context.path>master</context.path>
+            </properties>
+        </profile>
+    </profiles>
 </project>

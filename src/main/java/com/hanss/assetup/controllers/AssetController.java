@@ -6,6 +6,7 @@ import com.hanss.assetup.models.Asset;
 import com.hanss.assetup.models.User;
 import com.hanss.assetup.repository.AssetRepository;
 import com.hanss.assetup.repository.UserRepository;
+import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +18,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/api")
-public class AssetController {
+public class AssetController implements SecuredRestController {
 
     @Autowired
     private AssetRepository assetRepository;
