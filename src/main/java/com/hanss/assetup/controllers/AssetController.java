@@ -15,7 +15,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+/*
 @CrossOrigin(origins = "*", maxAge = 3600)
+*/
 @RestController
 @RequestMapping("/api")
 public class AssetController implements SecuredRestController {
