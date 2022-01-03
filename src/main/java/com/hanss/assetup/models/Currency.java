@@ -13,7 +13,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "CURRENCY",
         uniqueConstraints = {
-                @UniqueConstraint(columnNames = "name")
+                @UniqueConstraint(name = "UniqueName", columnNames = "name")
         })
 public class Currency {
     @Id
