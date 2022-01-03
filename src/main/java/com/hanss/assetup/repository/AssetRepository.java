@@ -1,12 +1,12 @@
 package com.hanss.assetup.repository;
 
-import java.util.List;
-
 import com.hanss.assetup.models.Asset;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, Long>{
-	List<Asset> findByUserId(Long userId);
+	Page<Asset> findByUserId(Long userId, Pageable pageable);
 }

@@ -6,18 +6,14 @@ import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Page;
 
 import java.net.URI;
-import java.util.List;
 
 /*
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,21 +25,32 @@ public class CurrencyController implements SecuredRestController {
     private CurrencyRepository currencyRepository;
 
     @GetMapping("/currencies")
-    public List<Currency> getAllCurrencies(){
-        return currencyRepository.findAll();
+    public ResponseEntity<Page<Currency>> getAllCurrencies(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
+    ) {
+        try {
+            Pageable paging = PageRequest.of(page, size);
+            return new ResponseEntity<>(currencyRepository.findAll(paging), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
     @GetMapping("/currencies/{id}")
-    public Currency getCurrency(@PathVariable long id){
-        return  currencyRepository.findById(id).get();
+    public ResponseEntity<Currency> getCurrency(@PathVariable long id) {
+        try {
+            return new ResponseEntity<>(currencyRepository.findById(id).get(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
     }
 
     @DeleteMapping("/currencies/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Void> deleteCurrency(@PathVariable long id) {
-
-        Currency currency =  currencyRepository.findById(id).get();
-        if (currency != null){
+        Currency currency = currencyRepository.findById(id).get();
+        if (currency != null) {
             currencyRepository.deleteById(id);
             return ResponseEntity.noContent().build();
         }
@@ -51,11 +58,10 @@ public class CurrencyController implements SecuredRestController {
     }
 
     @PutMapping("/currencies/{id}")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Currency> updateCurrency(@PathVariable long id, @RequestBody Currency currency){
-
-        Currency currencyOld =  currencyRepository.findById(id).get();
-        if (currencyOld != null){
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Currency> updateCurrency(@PathVariable long id, @RequestBody Currency currency) {
+        Currency currencyOld = currencyRepository.findById(id).get();
+        if (currencyOld != null) {
             currencyOld.setName(currency.getName());
             currencyOld.setDescription(currency.getDescription());
             Currency currencyUpdated = currencyRepository.save(currencyOld);
@@ -65,16 +71,20 @@ public class CurrencyController implements SecuredRestController {
     }
 
     @PostMapping("/currencies")
-    //@PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<Void> createCurrency(@RequestBody Currency currency){
-        currency.setId(-1L);
-        Currency createdCurrency = currencyRepository.save(currency);
-        //Location
-        //Get current resource url
-        ///{id}
-        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                .path("/{id}").buildAndExpand(createdCurrency.getId()).toUri();
-        return ResponseEntity.created(uri).build();
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> createCurrency(@RequestBody Currency currency) {
+        try {
+            currency.setId(-1L);
+            Currency createdCurrency = currencyRepository.save(currency);
+            //Location
+            //Get current resource url
+            ///{id}
+            URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                    .path("/{id}").buildAndExpand(createdCurrency.getId()).toUri();
+            return ResponseEntity.created(uri).build();
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
