@@ -33,6 +33,7 @@ public class AssetController implements SecuredRestController {
 
     @GetMapping("/assets")
     public ResponseEntity<Page<Asset>> getAllAssets(
+            @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
@@ -41,7 +42,13 @@ public class AssetController implements SecuredRestController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
-            return new ResponseEntity<>(assetRepository.findByUserId(user.getId(), paging), HttpStatus.OK);
+
+            Page<Asset> assetPage;
+            if (name == null)
+                assetPage = assetRepository.findByUserId(user.getId(), paging);
+            else
+                assetPage = assetRepository.findByUserIdAndNameContainingIgnoreCase(user.getId(), name, paging);
+            return new ResponseEntity<>(assetPage, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

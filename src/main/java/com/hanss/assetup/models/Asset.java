@@ -20,8 +20,11 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "ASSET",
-        uniqueConstraints=
-        @UniqueConstraint(columnNames = {"USER_ID", "TICKER", "CURRENCY_ID"}))
+    uniqueConstraints = {
+        @UniqueConstraint(name = "UniqueUserAndTickerAndCurrency", columnNames = {"USER_ID", "TICKER", "CURRENCY_ID"}),
+        @UniqueConstraint(name = "UniqueUserAndName", columnNames = {"USER_ID", "NAME"})
+    }
+)
 public class Asset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +36,12 @@ public class Asset {
     private Long userId;
 
     @NotBlank
-    @Size(max = 20)
+    @Size(max = 16)
     private String ticker;
+
+    @NotBlank
+    @Size(max = 256)
+    private String name;
 
     @Lob
     private String description;
@@ -59,6 +66,7 @@ public class Asset {
         return id == asset.id
                 && userId.equals(asset.userId)
                 && ticker.equals(asset.ticker)
+                && name.equals(asset.name)
                 && description.equals(asset.description)
                 && price == asset.price
                 && quantity == asset.quantity
@@ -76,11 +84,13 @@ public class Asset {
         this.id = -1L;
     }
 
-    public Asset(Long id, Long userId, String ticker, String description, float price, int quantity, Date purchaseDate, Long currencyId) {
+    public Asset(Long id, Long userId, String ticker, String name, String description
+            , float price, int quantity, Date purchaseDate, Long currencyId) {
         super();
         this.id = id;
         this.userId = userId;
         this.ticker = ticker;
+        this.name = name;
         this.description = description;
         this.price = price;
         this.quantity = quantity;
@@ -116,6 +126,14 @@ public class Asset {
         this.userId = username;
     }
 
+    public String getTicker() { return this.ticker; }
+
+    public void setTicker(String ticker) { this.ticker = ticker; }
+
+    public String getName() { return this.name; }
+
+    public void setName(String name) { this.name = name; }
+
     public void setDescription(String description) {
         this.description = description;
     }
@@ -127,10 +145,6 @@ public class Asset {
     public void setPurchaseDate(Date purchaseDate) {
         this.purchaseDate = purchaseDate;
     }
-
-    public String getTicker() { return this.ticker; }
-
-    public void setTicker(String ticker) { this.ticker = ticker; }
 
     public int getQuantity() { return this.quantity; }
 

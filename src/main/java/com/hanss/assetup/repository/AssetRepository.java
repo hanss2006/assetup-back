@@ -9,4 +9,5 @@ import org.springframework.data.domain.Page;
 @Repository
 public interface AssetRepository extends JpaRepository<Asset, Long>{
 	Page<Asset> findByUserId(Long userId, Pageable pageable);
+	Page<Asset> findByUserIdAndNameContainingIgnoreCase(Long userId, String name, Pageable pageable);
 }

@@ -1,5 +1,6 @@
 package com.hanss.assetup.controllers;
 
+import com.hanss.assetup.models.Asset;
 import com.hanss.assetup.models.Currency;
 import com.hanss.assetup.repository.CurrencyRepository;
 import com.hanss.assetup.security.SecuredRestController;
@@ -7,7 +8,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -26,12 +35,18 @@ public class CurrencyController implements SecuredRestController {
 
     @GetMapping("/currencies")
     public ResponseEntity<Page<Currency>> getAllCurrencies(
+            @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
     ) {
         try {
             Pageable paging = PageRequest.of(page, size);
-            return new ResponseEntity<>(currencyRepository.findAll(paging), HttpStatus.OK);
+            Page<Currency> currencyPage;
+            if (name == null)
+                currencyPage = currencyRepository.findAll(paging);
+            else
+                currencyPage = currencyRepository.findByNameContainingIgnoreCase(name, paging);
+            return new ResponseEntity<>(currencyPage, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
