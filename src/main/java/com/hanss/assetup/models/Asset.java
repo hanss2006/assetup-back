@@ -7,9 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotBlank;
@@ -21,7 +19,7 @@ import java.util.Objects;
 @Entity
 @Table(name = "ASSET",
     uniqueConstraints = {
-        @UniqueConstraint(name = "UniqueUserAndTickerAndCurrency", columnNames = {"USER_ID", "TICKER", "CURRENCY_ID"}),
+        @UniqueConstraint(name = "UniqueUserAndTicker", columnNames = {"USER_ID", "TICKER"}),
         @UniqueConstraint(name = "UniqueUserAndName", columnNames = {"USER_ID", "NAME"})
     }
 )
@@ -46,18 +44,6 @@ public class Asset {
     @Lob
     private String description;
 
-    private float price;
-
-    private int quantity;
-
-    private Date purchaseDate;
-    @Column(name="CURRENCY_ID")
-    private long currencyId;
-
-    @ManyToOne
-    @JoinColumn(name = "CURRENCY_ID", insertable = false, updatable = false)
-    private Currency currency;
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -67,16 +53,12 @@ public class Asset {
                 && userId.equals(asset.userId)
                 && ticker.equals(asset.ticker)
                 && name.equals(asset.name)
-                && description.equals(asset.description)
-                && price == asset.price
-                && quantity == asset.quantity
-                && purchaseDate.equals(asset.purchaseDate)
-                && currencyId == asset.currencyId;
+                && description.equals(asset.description);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, userId, ticker, description, price, quantity, purchaseDate);
+        return Objects.hash(id, userId, ticker, description);
     }
 
     protected Asset() {
@@ -92,10 +74,6 @@ public class Asset {
         this.ticker = ticker;
         this.name = name;
         this.description = description;
-        this.price = price;
-        this.quantity = quantity;
-        this.purchaseDate = purchaseDate;
-        this.currencyId = currencyId;
     }
 
     public Long getId() {
@@ -108,14 +86,6 @@ public class Asset {
 
     public String getDescription() {
         return description;
-    }
-
-    public float getPrice() {
-        return price;
-    }
-
-    public Date getPurchaseDate() {
-        return purchaseDate;
     }
 
     public void setId(Long id) {
@@ -136,27 +106,5 @@ public class Asset {
 
     public void setDescription(String description) {
         this.description = description;
-    }
-
-    public void setPrice(float price) {
-        this.price = price;
-    }
-
-    public void setPurchaseDate(Date purchaseDate) {
-        this.purchaseDate = purchaseDate;
-    }
-
-    public int getQuantity() { return this.quantity; }
-
-    public void setQuantity(int quantity) { this.quantity = quantity; }
-
-    public Currency getCurrency() { return this.currency; }
-
-    public long getCurrencyId() {
-        return currencyId;
-    }
-
-    public void setCurrencyId(long currencyId) {
-        this.currencyId = currencyId;
     }
 }

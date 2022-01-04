@@ -1,38 +1,47 @@
 package com.hanss.assetup.controllers;
 
-import java.net.URI;
-import com.hanss.assetup.models.Asset;
+import com.hanss.assetup.models.Ledger;
 import com.hanss.assetup.models.User;
-import com.hanss.assetup.repository.AssetRepository;
+import com.hanss.assetup.repository.LedgerRepository;
 import com.hanss.assetup.repository.UserRepository;
 import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Page;
+
+import java.net.URI;
 
 /*
 @CrossOrigin(origins = "*", maxAge = 3600)
 */
 @RestController
 @RequestMapping("/api")
-public class AssetController implements SecuredRestController {
+public class LedgerController implements SecuredRestController {
 
     @Autowired
-    private AssetRepository assetRepository;
+    private LedgerRepository ledgerRepository;
 
     @Autowired
     private UserRepository userRepository;
 
 
-    @GetMapping("/assets")
-    public ResponseEntity<Page<Asset>> getAssets(
+    @GetMapping("/ledgers")
+    public ResponseEntity<Page<Ledger>> getLedgers(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size
@@ -43,26 +52,26 @@ public class AssetController implements SecuredRestController {
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
 
-            Page<Asset> assetPage;
+            Page<Ledger> ledgerPage;
             if (name == null)
-                assetPage = assetRepository.findByUserId(user.getId(), paging);
+                ledgerPage = ledgerRepository.findByUserId(user.getId(), paging);
             else
-                assetPage = assetRepository.findByUserIdAndNameContainingIgnoreCase(user.getId(), name, paging);
-            return new ResponseEntity<>(assetPage, HttpStatus.OK);
+                ledgerPage = ledgerRepository.findByUserIdAndNameContainingIgnoreCase(user.getId(), name, paging);
+            return new ResponseEntity<>(ledgerPage, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/assets/{id}")
-    public ResponseEntity<Asset> getAsset(@PathVariable long id) {
+    @GetMapping("/ledgers/{id}")
+    public ResponseEntity<Ledger> getLedger(@PathVariable long id) {
         try {
-            Asset asset = assetRepository.findById(id).get();
+            Ledger ledger = ledgerRepository.findById(id).get();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
-            if (asset != null && asset.getUserId() == user.getId()) {
-                return new ResponseEntity<>(asset, HttpStatus.OK);
+            if (ledger != null && ledger.getUserId() == user.getId()) {
+                return new ResponseEntity<>(ledger, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
@@ -71,16 +80,16 @@ public class AssetController implements SecuredRestController {
     }
 
     // DELETE /users/{username}/todos/{id}
-    @DeleteMapping("/assets/{id}")
-    public ResponseEntity<Void> deleteAsset(@PathVariable long id) {
+    @DeleteMapping("/ledgers/{id}")
+    public ResponseEntity<Void> deleteLedger(@PathVariable long id) {
         try {
-            Asset asset = assetRepository.findById(id).get();
+            Ledger ledger = ledgerRepository.findById(id).get();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
 
-            if (asset != null && asset.getUserId() == user.getId()) {
-                assetRepository.deleteById(id);
+            if (ledger != null && ledger.getUserId() == user.getId()) {
+                ledgerRepository.deleteById(id);
                 return ResponseEntity.noContent().build();
             }
             return ResponseEntity.badRequest().build();
@@ -92,18 +101,18 @@ public class AssetController implements SecuredRestController {
 
     //Edit/Update a Asset
     //PUT /users/{user_name}/todos/{todo_id}
-    @PutMapping("/assets/{id}")
-    public ResponseEntity<Asset> updateAsset(@PathVariable long id, @RequestBody Asset asset) {
+    @PutMapping("/ledgers/{id}")
+    public ResponseEntity<Ledger> updateLedger(@PathVariable long id, @RequestBody Ledger ledger) {
         try {
-            Asset assetOld = assetRepository.findById(id).get();
+            Ledger ledgerOld = ledgerRepository.findById(id).get();
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
-            if (assetOld != null && assetOld.getUserId() == user.getId()) {
-                asset.setId(id);
-                asset.setUserId(user.getId());
-                Asset assetUpdated = assetRepository.save(asset);
-                return new ResponseEntity<Asset>(assetUpdated, HttpStatus.OK);
+            if (ledgerOld != null && ledgerOld.getUserId() == user.getId()) {
+                ledger.setId(id);
+                ledger.setUserId(user.getId());
+                Ledger ledgerUpdated = ledgerRepository.save(ledger);
+                return new ResponseEntity<Ledger>(ledgerUpdated, HttpStatus.OK);
             }
             return ResponseEntity.badRequest().build();
         } catch (Exception e) {
@@ -111,20 +120,20 @@ public class AssetController implements SecuredRestController {
         }
     }
 
-    @PostMapping("/assets")
-    public ResponseEntity<Void> createAsset(@RequestBody Asset asset) {
+    @PostMapping("/ledgers")
+    public ResponseEntity<Void> createLedger(@RequestBody Ledger ledger) {
         try {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
-            asset.setId(-1L);
-            asset.setUserId(user.getId());
-            Asset createdAsset = assetRepository.save(asset);
+            ledger.setId(-1L);
+            ledger.setUserId(user.getId());
+            Ledger createdLedger = ledgerRepository.save(ledger);
             //Location
             //Get current resource url
             ///{id}
             URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
-                    .path("/{id}").buildAndExpand(createdAsset.getId()).toUri();
+                    .path("/{id}").buildAndExpand(createdLedger.getId()).toUri();
             return ResponseEntity.created(uri).build();
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
