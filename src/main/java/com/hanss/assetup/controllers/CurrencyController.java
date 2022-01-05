@@ -5,6 +5,7 @@ import com.hanss.assetup.models.Currency;
 import com.hanss.assetup.repository.CurrencyRepository;
 import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -37,10 +38,14 @@ public class CurrencyController implements SecuredRestController {
     public ResponseEntity<Page<Currency>> getAllCurrencies(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
     ) {
         try {
-            Pageable paging = PageRequest.of(page, size);
+            Pageable paging = PageRequest.of(page
+                    , size
+                    , sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
             Page<Currency> currencyPage;
             if (name == null)
                 currencyPage = currencyRepository.findAll(paging);

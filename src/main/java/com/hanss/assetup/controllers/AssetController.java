@@ -7,6 +7,7 @@ import com.hanss.assetup.repository.AssetRepository;
 import com.hanss.assetup.repository.UserRepository;
 import com.hanss.assetup.security.SecuredRestController;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -35,10 +36,14 @@ public class AssetController implements SecuredRestController {
     public ResponseEntity<Page<Asset>> getAssets(
             @RequestParam(required = false) String name,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy,
+            @RequestParam(defaultValue = "asc") String sortDir
     ) {
         try {
-            Pageable paging = PageRequest.of(page, size);
+            Pageable paging = PageRequest.of(page
+                    , size
+                    , sortDir.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending());
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             String currentPrincipalName = authentication.getName();
             User user = userRepository.findByUsername(currentPrincipalName).get();
